@@ -11,6 +11,6 @@ making it easier to stay on top of your project's build and test status.
 TBA
 
 
-#License
+# License
 MIT License
 You can expand and modify this content as your project develops.
