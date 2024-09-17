@@ -1,5 +1,5 @@
 import subprocess
-# import config as conf
+from datetime import datetime
 
 try:
     from config import *
@@ -44,6 +44,9 @@ def check_git_email() -> str:
 
 def check_git_config() -> dict:
 
+    # Get Current date time
+    currentDate = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    
     branch = check_git_branch()
     origin = check_git_origin()
     username = check_git_username()
@@ -52,31 +55,39 @@ def check_git_config() -> dict:
     if check_config_exists():
 
         access_token = get_access_token()
-        
+
         gitinfo = {
-        "username": username,
-        "email": email,
-        "origin": origin,
-        "branch": branch,
-        "token": access_token
+        "origins": {
+            origin: {
+            "branch" : branch,
+            "token": "NOT SET",
+            "username": username,
+            "email": email,
+            "updatedAt": currentDate
+            }
+        }
         }
 
-        print("configuration set")
+        update_config(gitinfo)
+
+        print("New Configuration set in ~/.gitpipeline/config.yaml")
         return gitinfo
 
     else:
 
         gitinfo = {
-        "username": username,
-        "email": email,
-        "origin": origin,
-        "branch": branch,
-        "token": "NOT SET"
+        "origins": {
+            origin: {
+            "branch" : branch,
+            "token": "NOT SET",
+            "username": username,
+            "email": email,
+            "updatedAt": currentDate
+            }
         }
-        
-        create_config(gitinfo)
-        
+        }
+        update_config(gitinfo)
 
-
-        print("configuration created, please provide access token in ~/.gitpipeline/config.yaml")
+        print("Configuration created")
+        print("Please provide access token in ~/.gitpipeline/config.yaml")
         return gitinfo
