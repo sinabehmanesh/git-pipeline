@@ -23,6 +23,7 @@ def update_config(data) -> str:
     for origin_key in data["origins"]:
         data_origin = origin_key
 
+#TODOS: we should add check if the given origin exists in the current configuration, if not append a new origin
     with open(f'{homedir}/config.yaml', 'w+') as yaml_config:
         yaml_data = yaml.safe_load(yaml_config)
         if isinstance(yaml_data, dict):
