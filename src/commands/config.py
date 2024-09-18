@@ -23,20 +23,25 @@ def update_config(data) -> str:
     for origin_key in data["origins"]:
         data_origin = origin_key
 
-#TODOS: we should add check if the given origin exists in the current configuration, if not append a new origin
-    with open(f'{homedir}/config.yaml', 'w+') as yaml_config:
+#TODOS: we should add check if the given origin exists in the current configuration, if not, append a new origin
+    with open(f'{homedir}/config.yaml', 'r+') as yaml_config:
         yaml_data = yaml.safe_load(yaml_config)
         if isinstance(yaml_data, dict):
             for key, value in yaml_data.items():
-                if isinstance(value, dict):
-                    # This means the current key has nested keys (layer 2)
-                    for sub_key in value.keys():
-                        if {sub_key} == data_origin:
-                            print("configuration already exist for this origin")
-                        else:
-                            print(f"Could not find configuration for this origin")
-                else:
-                    print(f"Could not find configuration for this origin")
+                for item in value:
+                    if item == data_origin:
+                        print("config exists")
+                # if isinstance(value, dict):
+                #     # This means the current key has nested keys (layer 2)
+                #     for sub_key in value.keys():
+                #         if {sub_key} == data_origin:
+                #             print("configuration already exist for this origin")
+                #             print(sub_key)
+                #         else:
+                #             print(f"Could not find configuration for this origin")
+                #             print(f"{data_origin} not found")
+                # else:
+                #     print(f"Could not find configuration for this origin")
 
         yaml.dump(data, yaml_config)
 
