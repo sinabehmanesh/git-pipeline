@@ -1,5 +1,6 @@
 import subprocess
 from datetime import datetime
+from colorama import Fore, Style, init
 
 try:
     from config import *
@@ -12,7 +13,7 @@ def check_git_branch() -> str:
                                               stderr=subprocess.STDOUT).strip().decode('utf-8')
         return branch_name
     except subprocess.CalledProcessError as e:
-        print("Error: {e.output.decode('ufw-8')}")
+        print(Fore.RED + "Error: {e.output.decode('ufw-8')}")
         return None
         
 def check_git_origin() -> str:
@@ -21,7 +22,7 @@ def check_git_origin() -> str:
                                          stderr=subprocess.STDOUT).strip().decode('utf-8')
         return origin
     except subprocess.CalledProcessError as e:
-        print("Error: {e.output.deocde('utf-8')}")
+        print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
         return None
     
 def check_git_username() -> str:
@@ -30,7 +31,7 @@ def check_git_username() -> str:
                                          stderr=subprocess.STDOUT).strip().decode('utf-8')
         return origin
     except subprocess.CalledProcessError as e:
-        print("Error: {e.output.deocde('utf-8')}")
+        print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
         return None
 
 def check_git_email() -> str:
@@ -39,7 +40,7 @@ def check_git_email() -> str:
                                          stderr=subprocess.STDOUT).strip().decode('utf-8')
         return origin
     except subprocess.CalledProcessError as e:
-        print("Error: {e.output.deocde('utf-8')}")
+        print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
         return None
 
 def check_git_config() -> dict:
@@ -60,7 +61,7 @@ def check_git_config() -> dict:
         "origins": {
             origin: {
             "branch" : branch,
-            "token": "NOT SET",
+            "token": access_token,
             "username": username,
             "email": email,
             "updatedAt": currentDate
@@ -69,8 +70,6 @@ def check_git_config() -> dict:
         }
 
         update_config(gitinfo)
-
-        print("New Configuration set in ~/.gitpipeline/config.yaml")
         return gitinfo
 
     else:
@@ -88,6 +87,6 @@ def check_git_config() -> dict:
         }
         update_config(gitinfo)
 
-        print("Configuration created")
+        print(Fore.GREEN + "Configuration created")
         print("Please provide access token in ~/.gitpipeline/config.yaml")
         return gitinfo
