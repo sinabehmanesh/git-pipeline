@@ -1,6 +1,7 @@
 import argparse
+from colorama import Fore, Style, init
 
-import commands.init as init
+import commands.init as initialize
 
 def hell():
     print("hi")
@@ -19,7 +20,7 @@ def main():
     args = parser.parse_args()
 
     commands = {
-        'init': init.check_git_config
+        'init': initialize.check_git_config
     }
 
     if args.command in commands:
@@ -30,4 +31,8 @@ def main():
 
 
 if __name__ == "__main__":
+
+    # Initialize colorama
+    init(autoreset=True)
+
     main()

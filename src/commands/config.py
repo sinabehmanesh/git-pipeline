@@ -1,6 +1,8 @@
 import os
-from pathlib import Path
 import yaml
+from pathlib import Path
+from colorama import Fore, Style, init
+
 
 def check_config_exists() -> bool:
     #Check if config directory and config file exist
@@ -10,10 +12,12 @@ def check_config_exists() -> bool:
         if os.path.isfile(f"{homedir}/config.yaml"):
             return True
         else:
-            return False
+            with open(f'{homedir}/config.yaml', 'w'):
+                return False
     else:
         Path(homedir).mkdir(parents=True, exist_ok=True)
-        return False
+        with open(f'{homedir}/config.yaml', 'w'):
+            return False
 
 
 def update_config(data) -> str:
@@ -23,21 +27,37 @@ def update_config(data) -> str:
     for origin_key in data["origins"]:
         data_origin = origin_key
 
-    with open(f'{homedir}/config.yaml', 'w+') as yaml_config:
-        yaml_data = yaml.safe_load(yaml_config)
+#TODOS: we should add check if the given origin exists in the current configuration, if not, append a new origin
+    with open(f'{homedir}/config.yaml', 'r+') as yaml_file:
+        
+        try:
+            yaml_data = yaml.safe_load(yaml_file) or {}
+        except yaml.YAMLError:
+            print(Fore.RED + "\033[1mERROR:" + Style.NORMAL + " Wrong yaml file indentation, please double check the configuration")
+            raise SystemExit
+        
         if isinstance(yaml_data, dict):
-            for key, value in yaml_data.items():
-                if isinstance(value, dict):
-                    # This means the current key has nested keys (layer 2)
-                    for sub_key in value.keys():
-                        if {sub_key} == data_origin:
-                            print("configuration already exist for this origin")
-                        else:
-                            print(f"Could not find configuration for this origin")
-                else:
-                    print(f"Could not find configuration for this origin")
+            for _, value in yaml_data.items():
+                for item in value:
 
-        yaml.dump(data, yaml_config)
+                    if item == data_origin:
+                        #Now it will update the origin data
+                        with open(f'{homedir}/config.yaml', 'w') as file:
+                            yaml_data['origins'][item].update(data['origins'][item])
+                            yaml.dump(yaml_data, file, default_flow_style=False)
+                            print("Origin Updated!")
+                            
+                    else:
+                        print("origin does not exist")
+                        with open(f'{homedir}/config.yaml', 'a') as file:
+                            yaml.dump(data, file, default_flow_style=False)
+                            
+
+        elif yaml_data is None:
+            print(Fore.LIGHTYELLOW_EX + "Config file was empty!")
+            with open(f'{homedir}/config.yaml', 'w') as file:
+                file.truncate()
+                yaml.dump(data, file, default_flow_style=False)
 
 
 def get_access_token() -> str:
