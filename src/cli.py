@@ -20,7 +20,7 @@ def main():
     args = parser.parse_args()
 
     commands = {
-        'init': initialize.check_git_config
+        'init': initialize.init_git_config
     }
 
     if args.command in commands:
