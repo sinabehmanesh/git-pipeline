@@ -29,17 +29,21 @@ def update_config(data) -> str:
 
 #TODOS: we should add check if the given origin exists in the current configuration, if not, append a new origin
     with open(f'{homedir}/config.yaml', 'r+') as yaml_file:
-        
+
         try:
             yaml_data = yaml.safe_load(yaml_file) or {}
         except yaml.YAMLError:
             print(Fore.RED + "\033[1mERROR:" + Style.NORMAL + " Wrong yaml file indentation, please double check the configuration")
             raise SystemExit
-        
-        if isinstance(yaml_data, dict):
+        if yaml_data is None or yaml_data == {}:
+            print(Fore.LIGHTYELLOW_EX + "Config file was empty!")
+            with open(f'{homedir}/config.yaml', 'w') as file:
+                file.truncate()
+                yaml.dump(data, file, default_flow_style=False)
+
+        elif isinstance(yaml_data, dict):
             for _, value in yaml_data.items():
                 for item in value:
-
                     if item == data_origin:
                         #Now it will update the origin data
                         with open(f'{homedir}/config.yaml', 'w') as file:
@@ -51,14 +55,8 @@ def update_config(data) -> str:
                         print("origin does not exist")
                         with open(f'{homedir}/config.yaml', 'a') as file:
                             yaml.dump(data, file, default_flow_style=False)
-                            
-
-        elif yaml_data is None:
-            print(Fore.LIGHTYELLOW_EX + "Config file was empty!")
-            with open(f'{homedir}/config.yaml', 'w') as file:
-                file.truncate()
-                yaml.dump(data, file, default_flow_style=False)
-
+        else:
+            print("what?")
 
 def get_access_token() -> str:
     return "thisistestaccesstoken"
