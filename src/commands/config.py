@@ -50,7 +50,7 @@ def update_config(data) -> str:
                             yaml_data['origins'][item].update(data['origins'][item])
                             yaml.dump(yaml_data, file, default_flow_style=False)
                             print("Origin Updated!")
-                            
+
                     else:
                         print("origin does not exist")
                         with open(f'{homedir}/config.yaml', 'a') as file:
