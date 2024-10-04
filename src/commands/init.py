@@ -24,7 +24,13 @@ def check_git_origin() -> str:
     except subprocess.CalledProcessError as e:
         print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
         return None
-    
+
+#This is for the api check, if its GitHub oder GitLab
+def check_git_api_type():
+    #I should find a way to check if the ssh url(repo url) belongs to a GitHub Api or GitLab Api.
+    #Idk how to do it.
+    print("this api is gitlab? github? who know?")
+
 def check_git_username() -> str:
     try:
         origin = subprocess.check_output(['git', 'config', 'user.name'],
