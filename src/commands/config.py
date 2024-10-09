@@ -3,6 +3,7 @@ import yaml
 from pathlib import Path
 from colorama import Fore, Style, init
 
+import commands.init as init
 
 def check_config_exists() -> bool:
     #Check if config directory and config file exist
@@ -50,7 +51,7 @@ def update_config(data) -> str:
                             yaml_data['origins'][item].update(data['origins'][item])
                             yaml.dump(yaml_data, file, default_flow_style=False)
                             print("Origin Updated!")
-                            
+
                     else:
                         print("origin does not exist")
                         with open(f'{homedir}/config.yaml', 'a') as file:
@@ -59,7 +60,34 @@ def update_config(data) -> str:
             print("what?")
 
 def get_access_token() -> str:
-    return "thisistestaccesstoken"
+
+    homedir = f'{os.path.expanduser("~")}/.gitpipeline'
+    yaml_file = Path(f"{homedir}/config.yaml")
+
+    #Define Global use of access_token variable
+    access_token = None
+
+    origin_name = init.check_git_origin()
+
+    if check_config_exists():
+        try:
+            with yaml_file.open('r') as file:
+                
+                data = yaml.safe_load(file)
+                
+                if origin_name in data['origins']:
+                    access_token = data['origins'][origin_name]['token']
+
+        except KeyError as e:
+            return f"Invalid YAML structure. Missing key: {e}"
+        except Exception as e:
+            return f"An unexpected error occurred: {e}"
+
+        return access_token
+
+    else:
+        print(Fore.RED + "\033[1mERROR:" + Style.NORMAL + " Config file not found, run gp init to create config file or reload your backup!")
+        raise SystemExit(1)
 
 def show_config() -> str:
     pass
