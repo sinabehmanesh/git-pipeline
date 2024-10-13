@@ -13,5 +13,8 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-
-      - run: python --version
+      - name: python cli build
+        run: |
+          python --version
+          pip install -r requirements.txt
+          python ./src/cli.py init
