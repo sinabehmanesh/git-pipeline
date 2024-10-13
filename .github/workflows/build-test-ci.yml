@@ -1,0 +1,17 @@
+name: Build and Test INIT
+run-name: ${{ github.actor }} is testing out cli init
+on: [push]
+jobs:
+  BUILD_INTEGRITY:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "cli init"
+
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+
+      - run: python --version
