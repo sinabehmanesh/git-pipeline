@@ -6,6 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: python
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}
     steps:
       - run: echo "cli init"
 
