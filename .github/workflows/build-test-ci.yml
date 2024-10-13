@@ -4,6 +4,8 @@ on: [push]
 jobs:
   BUILD_INTEGRITY:
     runs-on: ubuntu-latest
+    container:
+      image: python
     steps:
       - run: echo "cli init"
 
