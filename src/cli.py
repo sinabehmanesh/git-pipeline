@@ -1,4 +1,5 @@
 import argparse
+import sys
 from colorama import Fore, Style, init
 
 import commands.init as initialize
@@ -8,6 +9,10 @@ def hell():
     print("hi")
 
 def main():
+
+    if len(sys.argv) < 2:
+        print("Wrong input, please type --help for help!")
+        sys.exit(1)
 
     parser = argparse.ArgumentParser(description="Simply check your pipeline with one command")
 
