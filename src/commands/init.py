@@ -49,7 +49,7 @@ def check_git_email() -> str:
         print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
         return None
 
-def init_git_config() -> dict:
+def init_git_config(args) -> dict:
 
     # Get Current date time
     currentDate = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
