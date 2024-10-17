@@ -1,17 +1,20 @@
-name: Build and Test INIT
+name: Build and Test
 run-name: ${{ github.actor }} is testing out cli init
 on: [push]
 jobs:
-  BUILD_INTEGRITY:
+  build:
+    name: build
     runs-on: ubuntu-latest
     container:
       image: python
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
-    steps:
-      - run: echo "cli init"
+    strategy:
+      matrix:
+        job: [build, test]
 
-      - name: Check out repository code
+    steps:
+      - name: ${{ matrix.job }}
         uses: actions/checkout@v4
 
       - name: List files in the repository
