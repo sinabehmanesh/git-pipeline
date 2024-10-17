@@ -9,12 +9,9 @@ jobs:
       image: python
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
-    strategy:
-      matrix:
-        job: [build, test]
 
     steps:
-      - name: ${{ matrix.job }}
+      - name: Check Out
         uses: actions/checkout@v4
 
       - name: List files in the repository
@@ -24,4 +21,16 @@ jobs:
         run: |
           python --version
           pip install -r requirements.txt
-          python ./src/cli.py init
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    container:
+      image: python
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}      
+    steps:
+      - name: python cli build
+        run: |
+          python --version
+          pip install -r requirements.txt
