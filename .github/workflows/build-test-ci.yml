@@ -2,7 +2,7 @@ name: Build and Test
 run-name: ${{ github.actor }} is testing out cli init
 on: [push]
 jobs:
-  build:
+  test:
     name: build
     runs-on: ubuntu-latest
     container:
@@ -12,26 +12,25 @@ jobs:
 
     steps:
       - name: Check Out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.1
 
-      - name: List files in the repository
+      # Step 2: Set up Python environment
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v5.2.0
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
         run: |
-          ls ${{ github.workspace }}
-      - name: python cli build
-        run: |
-          python --version
+          python -m pip install --upgrade pip 
           pip install -r requirements.txt
 
-  test:
-    name: test
-    needs: [build]
-    runs-on: ubuntu-latest
-    container:
-      image: python
-      volumes:
-        - ${{ github.workspace }}:${{ github.workspace }}      
-    steps:
-      - name: python cli build
+      - name: Run init
         run: |
-          python --version
-          pip install -r requirements.txt
+          python3.10 src/cli.py init
+          python3.10 src/cli.py status
+
+      - name: Run linter (flake8)
+        run: |
+          pip install flake8
+          flake8 .
