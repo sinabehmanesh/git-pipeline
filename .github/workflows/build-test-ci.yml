@@ -25,8 +25,21 @@ jobs:
           python src/cli.py init
           python src/cli.py status
 
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    container:
+      image: python
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}
+
+    steps:
+      - name: Check Out
+        uses: actions/checkout@v4.2.1
+
       - name: Run linter (flake8)
         run: |
           pip install flake8
+          pip install black
           flake8 .
           black .
