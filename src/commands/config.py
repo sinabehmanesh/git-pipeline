@@ -1,9 +1,55 @@
 import os
 import yaml
+import subprocess
+
 from pathlib import Path
 from colorama import Fore, Style, init
 
 import commands.init as init
+
+
+def check_git_branch() -> str:
+    try:
+        branch_name = subprocess.check_output(['git', 'branch', '--show-current'],
+                                              stderr=subprocess.STDOUT).strip().decode('utf-8')
+        return branch_name
+    except subprocess.CalledProcessError as e:
+        print(Fore.RED + "Error: {e.output.decode('ufw-8')}")
+        return None
+        
+def check_git_origin() -> str:
+    try:
+        origin = subprocess.check_output(['git', 'remote', 'get-url', 'origin'],
+                                         stderr=subprocess.STDOUT).strip().decode('utf-8')
+        return origin
+    except subprocess.CalledProcessError as e:
+        print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
+        return None
+
+#This is for the api check, if its GitHub oder GitLab
+def check_git_api_type():
+    #I should find a way to check if the ssh url(repo url) belongs to a GitHub Api or GitLab Api.
+    #Idk how to do it.
+    print("this api is gitlab? github? who know?")
+
+def check_git_username() -> str:
+    try:
+        origin = subprocess.check_output(['git', 'config', 'user.name'],
+                                         stderr=subprocess.STDOUT).strip().decode('utf-8')
+        return origin
+    except subprocess.CalledProcessError as e:
+        print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
+        return None
+
+def check_git_email() -> str:
+    try:
+        origin = subprocess.check_output(['git', 'config', 'user.email'],
+                                         stderr=subprocess.STDOUT).strip().decode('utf-8')
+        return origin
+    except subprocess.CalledProcessError as e:
+        print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
+        return None
+
 
 def check_config_exists() -> bool:
     #Check if config directory and config file exist
