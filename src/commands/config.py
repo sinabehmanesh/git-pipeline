@@ -45,7 +45,7 @@ def check_git_origin() -> str:
         )
         return origin
     except subprocess.CalledProcessError as e:
-        print(Fore.RED + f"Error: {e.output.deocde('utf-8')}")
+        print(Fore.RED + f"Error: {e.output.decode('utf-8')}")
         return None
 
 
@@ -100,7 +100,7 @@ def check_git_username() -> str:
         )
         return origin
     except subprocess.CalledProcessError as e:
-        print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
+        print(Fore.RED + f"Error: {e.output.decode('utf-8')}")
         return None
 
 
@@ -115,7 +115,7 @@ def check_git_email() -> str:
         )
         return origin
     except subprocess.CalledProcessError as e:
-        print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
+        print(Fore.RED + f"Error: {e.output.decode('utf-8')}")
         return None
 
 
