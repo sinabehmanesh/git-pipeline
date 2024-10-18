@@ -1,9 +1,18 @@
 name: Build and Test
 run-name: ${{ github.actor }} is testing out cli init
-on: [push]
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    tags:
+      - '*'
+  workflow_dispatch:
 jobs:
   test:
     name: build
+    if: always()
     runs-on: ubuntu-latest
     container:
       image: python
@@ -32,7 +41,7 @@ jobs:
       image: python
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
-
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.ref == 'tag' }}
     steps:
       - name: Check Out
         uses: actions/checkout@v4.2.1
