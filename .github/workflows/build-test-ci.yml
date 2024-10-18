@@ -1,24 +1,49 @@
-name: Build and Test INIT
+name: Build and Test
 run-name: ${{ github.actor }} is testing out cli init
-on: [push]
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    tags:
+      - '*'
+  workflow_dispatch:
 jobs:
-  BUILD_INTEGRITY:
+  test:
+    name: build
+    if: always()
     runs-on: ubuntu-latest
     container:
       image: python
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
+
     steps:
-      - run: echo "cli init"
+      - name: Check Out
+        uses: actions/checkout@v4.2.1
 
-      - name: Check out repository code
-        uses: actions/checkout@v4
-
-      - name: List files in the repository
+      - name: Install dependencies
         run: |
-          ls ${{ github.workspace }}
-      - name: python cli build
-        run: |
-          python --version
+          python -m pip install --upgrade pip 
           pip install -r requirements.txt
-          python ./src/cli.py init
+          python --version
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    container:
+      image: python
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.ref == 'tag' }}
+    steps:
+      - name: Check Out
+        uses: actions/checkout@v4.2.1
+
+      - name: Run linter (flake8)
+        run: |
+          pip install flake8
+          pip install black
+          flake8 .
+          black .
