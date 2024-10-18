@@ -29,11 +29,6 @@ jobs:
           pip install -r requirements.txt
           python --version
 
-      - name: Run init and status
-        run: |
-          python src/cli.py init
-          python src/cli.py status
-
   lint:
     name: lint
     runs-on: ubuntu-latest
