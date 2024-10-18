@@ -1,11 +1,21 @@
 import os
 import yaml
 import subprocess
+import re
 
 from pathlib import Path
 from colorama import Fore, Style
 
 import commands.init as init
+
+
+def check_git_domain() -> str:
+    git_domain_name = extract_domain()
+    if git_domain_name is None:
+        print("Can not detect GIT domain")
+        SystemExit(1)
+    else:
+        return git_domain_name
 
 
 def check_git_branch() -> str:
@@ -19,7 +29,7 @@ def check_git_branch() -> str:
         )
         return branch_name
     except subprocess.CalledProcessError as e:
-        print(Fore.RED + "Error: {e.output.decode('ufw-8')}")
+        print(Fore.RED + f"Error: {e.output.decode('ufw-8')}")
         return None
 
 
@@ -35,15 +45,48 @@ def check_git_origin() -> str:
         )
         return origin
     except subprocess.CalledProcessError as e:
-        print(Fore.RED + "Error: {e.output.deocde('utf-8')}")
+        print(Fore.RED + f"Error: {e.output.deocde('utf-8')}")
         return None
 
 
+def check_git_repo_name() -> str:
+    try:
+        result = subprocess.check_output(
+            "basename `git rev-parse --show-toplevel`", shell=True
+        )
+        repo_name = result.decode("utf-8").strip()
+        return repo_name
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred: {e}")
+        return None
+
+
+# Call this function using check_git_domain function.
+def extract_domain():
+    remote_url = check_git_origin()
+
+    ssh_pattern = r"@([^:]+)"
+    https_pattern = r"https://([^/]+)"
+
+    # Check if the URL is in SSH format
+    ssh_match = re.search(ssh_pattern, remote_url)
+    if ssh_match:
+        return ssh_match.group(1)
+
+    # Check if the URL is in HTTPS format
+    https_match = re.search(https_pattern, remote_url)
+    if https_match:
+        return https_match.group(1)
+
+    # Return None if no match
+    return None
+
+
 # This is for the api check, if its GitHub oder GitLab
-def check_git_api_type():
+def check_git_api_type() -> str:
     # check if the ssh url belongs to a GitHub or GitLab.
     # Idk how to do it.
-    print("this api is gitlab? github? who know?")
+    return "github"
 
 
 def check_git_username() -> str:

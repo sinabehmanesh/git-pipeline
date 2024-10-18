@@ -21,9 +21,10 @@ def main():
 
     subparser = parser.add_subparsers(dest="command", help="available command")
 
-    # commands definition
+    # INIT Definition
     init_parser = subparser.add_parser("init", help="check status")
 
+    # STATUS Definition
     status_parser = subparser.add_parser(
         "status",
         help="check pipeline status",
