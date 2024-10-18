@@ -29,7 +29,7 @@ def check_git_branch() -> str:
         )
         return branch_name
     except subprocess.CalledProcessError as e:
-        print(Fore.RED + f"Error: {e.output.decode('ufw-8')}")
+        print(Fore.RED + f"Error: {e.output.decode('utf-8')}")
         return None
 
 
